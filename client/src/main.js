@@ -4,8 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import vueRouter from 'vue-router'
 import vueResource from 'vue-resource'
-import HelloWorld from './components/HelloWorld'
-import Test from './components/Test'
+import mainView from './components/main-view'
 
 Vue.use(vueResource)
 Vue.use(vueRouter)
@@ -16,8 +15,7 @@ const router = new vueRouter({
     mode: 'history',
     base: __dirname,
     routes: [
-        {path:'/', component: HelloWorld},
-        {path:'/test', component: Test}
+        {path:'/', component: mainView}
     ]
 })
 

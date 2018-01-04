@@ -2,6 +2,11 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
+const fs = require('fs')
+
+var contents = fs.readFileSync("db.json");
+var jsonContent = JSON.parse(contents);
+console.log(jsonContent.labs[0].lab)
 
 const app = express()
 const plotly = require('plotly')('btroche', '3HB9eLk90oduXc1GJnIb')
@@ -11,7 +16,7 @@ app.use(cors())
 
 app.post('/labs', (req, res) => {
     res.send({
-        message:`labs worked`
+        message:`labs workded`
     })
 })
 
@@ -23,7 +28,10 @@ app.post('/diagnosis', (req, res) => {
 
 app.post('/patients', (req, res) => {
     res.send({
-        message:`patients worked`
+        id: jsonContent.patients[0].id,
+        sex: jsonContent.patients[0].sex,
+        risk_score: jsonContent.patients[0].risk_score,
+        age: jsonContent.patients[0].age
     })
 })
 
