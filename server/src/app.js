@@ -21,18 +21,54 @@ app.post('/labs', (req, res) => {
 })
 
 app.post('/diagnosis', (req, res) => {
+    
+    var icd_code = []
+    var date = []
+    var description = []
+    
+    for (var i = 0; i < jsonContent.diagnosis.length; i++){
+        if (jsonContent.diagnosis[i].patient_id == req.body.patient_id){
+            
+            icd_code.push(jsonContent.diagnosis[i].icd_code_id)
+            date.push(jsonContent.diagnosis[i].date)
+            
+        }
+    }
+    
+    for (var g = 0; g < icd_code.length; g++){
+                for (var j = 0; j < jsonContent.icd_codes.length; j++){
+                    if (icd_code[g] == jsonContent.icd_codes[j].id){
+            
+                        description.push(jsonContent.icd_codes[j].description)
+                                    
+                    }
+                }
+            }
+    
+    console.log(date.length)
+    console.log(icd_code.length)
+    console.log(description.length)
+    
     res.send({
-        message:`diagnosis worked`
+        DATE: date,
+        ICD: icd_code,
+        DESCRIPTION: description
     })
+    
+    
+    
+//    res.send({
+//        id: 0,
+//        patient_id: `NotFound`,
+//        icd_code_id: 0,
+//        date: `NotFound`
+//    })
 })
 
 app.post('/patients', (req, res) => {
-    res.send({
-        id: jsonContent.patients[0].id,
-        sex: jsonContent.patients[0].sex,
-        risk_score: jsonContent.patients[0].risk_score,
-        age: jsonContent.patients[0].age
-    })
+    res.send(
+        jsonContent.patients
+    )
 })
 
 app.post('/icd_codes', (req, res) => {

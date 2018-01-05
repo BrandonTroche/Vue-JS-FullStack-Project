@@ -1,21 +1,26 @@
 <template>
     <div>
+<!--
         <ul>
       
             <li><button @click="postL">labs</button></li>
             <li><button @click="postI">icd</button></li>
             <li><button @click="postD">diagnosis</button></li>
-            <li><button @click="postP">patients</button></li>
-            <li v-for="pa in patient">{{pa.id}} {{pa.sex}} {{pa.risk_score}} {{pa.age}}</li>
+-->
+<!--            <li><button @click="postP">patients</button></li>-->
+            
       
-        </ul>
+<!--        </ul>-->
         <div class="blue">
         
-            a
+            <ul>
             
-            <br>
+                <li v-for="pa in patient">
+                
+                    <span @click="postD(pa.id)">ID : {{pa.id}} Sex : {{pa.sex}}  Risk Score: {{pa.risk_score}} Age: {{pa.age}}</span>
+                </li>
             
-            a
+            </ul>
             
         </div>
         
@@ -26,8 +31,16 @@
         </div>
         <div class="red">
             
-            a
+<!--            {{diagnosis}}-->
         
+            <ul>
+            
+                <li v-for="dat in diagnosis.DATE" style="float:left">DATE: {{dat}}</li>
+                <li v-for="icd in diagnosis.ICD" style="float:left">ICD: {{icd}}</li>
+                <li v-for="des in diagnosis.DESCRIPTION" style="float:left">DESCRIPTION: {{des}}</li>
+                
+            </ul>
+            
         </div>
     </div>
 </template>
@@ -44,7 +57,10 @@ export default {
     data () {
         return {
             patient: [
-            ]
+            ],
+            diagnosis: {
+                
+            }
         }
     },
     methods: {
@@ -54,18 +70,23 @@ export default {
             })
             console.log(response.data)
         },
-        async postD () {
+        async postD (patient) {
             const response = await postDiagnosis.queryDB({
-                test: 'test'
+                patient_id: patient
             })
-            console.log(response.data)
+            
+            this.diagnosis = response.data
+//            console.log(response.data)
+//            console.log(patient)
+//            console.log(this.dataset.i)
         },
         async postP () {
             const response = await postPatients.queryDB({
                 test: 'test'
             })
-            this.patient.push(response.data)
-            //console.log(response.data)
+//            this.patient.push(response.data)
+            this.patient = response.data
+//            console.log(response.data)
         },
         async postI () {
             const response = await postIcd.queryDB({
@@ -73,6 +94,12 @@ export default {
             })
             console.log(response.data)
         }
+    },
+    created: async function(){
+        const response = await postPatients.queryDB({
+                test: 'test'
+        })
+        this.patient = response.data
     }
 }
 </script>
