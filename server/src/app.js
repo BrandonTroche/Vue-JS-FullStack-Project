@@ -26,6 +26,8 @@ app.post('/diagnosis', (req, res) => {
     var date = []
     var description = []
     
+    var queryResult = []
+    
     for (var i = 0; i < jsonContent.diagnosis.length; i++){
         if (jsonContent.diagnosis[i].patient_id == req.body.patient_id){
             
@@ -35,25 +37,26 @@ app.post('/diagnosis', (req, res) => {
         }
     }
     
-    for (var g = 0; g < icd_code.length; g++){
-                for (var j = 0; j < jsonContent.icd_codes.length; j++){
-                    if (icd_code[g] == jsonContent.icd_codes[j].id){
-            
-                        description.push(jsonContent.icd_codes[j].description)
+    for (var i = 0; i < icd_code.length; i++){
+        for (var j = 0; j < jsonContent.icd_codes.length; j++){
+            if (icd_code[i] == jsonContent.icd_codes[j].id){
+                description.push(jsonContent.icd_codes[j].description)
                                     
-                    }
-                }
             }
+        }
+    }
     
-    console.log(date.length)
-    console.log(icd_code.length)
-    console.log(description.length)
+    for (var i = 0; i < icd_code.length; i++){
+        var myObject = {
+            DATE: date[i],
+            ICD: icd_code[i],
+            DESCRIPTION: description[i]
+        }
+        queryResult.push(myObject)
+    }
     
-    res.send({
-        DATE: date,
-        ICD: icd_code,
-        DESCRIPTION: description
-    })
+    
+    res.send(queryResult)
     
     
     

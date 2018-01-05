@@ -11,37 +11,62 @@
             
       
 <!--        </ul>-->
-        <div class="blue">
+        <table class="blue">
         
-            <ul>
+            <tr>
             
-                <li v-for="pa in patient">
+                <th>Patient Id</th>
+                <th>Risk Score</th>
+                <th>Age</th>
+                <th>Sex</th>
+            </tr>
+            <tr v-for="pa in patient">
+<!--                <li >-->
                 
-                    <span @click="postD(pa.id)">ID : {{pa.id}} Sex : {{pa.sex}}  Risk Score: {{pa.risk_score}} Age: {{pa.age}}</span>
-                </li>
+                    <th @click="postD(pa.id)">{{pa.id}}</th>
+                
+                    <th @click="postD(pa.id)">{{pa.risk_score}}</th>
+                
+                    <th @click="postD(pa.id)">{{pa.sex}}</th>
+                
+                    <th @click="postD(pa.id)">{{pa.age}}</th>
+<!--                </li>-->
             
-            </ul>
+            </tr>
             
-        </div>
+        </table>
         
         <div class="yellow">
             
             a
         
         </div>
-        <div class="red">
+        <table class="red">
             
-<!--            {{diagnosis}}-->
-        
-            <ul>
+                <tr>
             
+                <th>Date</th>
+                <th>ICD Code</th>
+                <th>Description</th>
+                    
+                </tr>
+            <tr v-for="dia in diagnosis">
+                
+                    <th>{{dia.DATE}}</th>
+                
+                    <th>{{dia.ICD}}</th>
+                
+                    <th>{{dia.DESCRIPTION}}</th>
+            
+            </tr>
+<!--
+                
                 <li v-for="dat in diagnosis.DATE" style="float:left">DATE: {{dat}}</li>
                 <li v-for="icd in diagnosis.ICD" style="float:left">ICD: {{icd}}</li>
                 <li v-for="des in diagnosis.DESCRIPTION" style="float:left">DESCRIPTION: {{des}}</li>
-                
-            </ul>
-            
-        </div>
+                            
+-->
+        </table>
     </div>
 </template>
 
@@ -58,9 +83,9 @@ export default {
         return {
             patient: [
             ],
-            diagnosis: {
+            diagnosis: [
                 
-            }
+            ]
         }
     },
     methods: {
