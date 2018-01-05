@@ -26,7 +26,9 @@
         </div>
         <div class="yellow">
             
-            <iframe id="plot1" src="https://plot.ly/~btroche/3.embed" frameborder="0" style="width:100%;height:75%;"></iframe>
+            <iframe id="plot1" src="https://plot.ly/~Btown/2.embed" frameborder="0" style="width:100%;height:75%;"></iframe>
+            
+            <iframe id="plot2" src="https://plot.ly/~Btown/4.embed" frameborder="0" style="width:100%;height:75%;"></iframe>
         
         </div>
         <div class="red">
@@ -79,6 +81,7 @@ export default {
             })
             
             document.getElementById('plot1').src += ''
+            document.getElementById('plot2').src += ''
         },
         async postD (patient) {
             const response = await postDiagnosis.queryDB({
@@ -111,7 +114,7 @@ export default {
     
     .yellow{
 /*        background-color: yellow;*/
-        height: 375px !important;
+        height: 475px !important;
         width: 75% !important;
         float:left;
         overflow: scroll;

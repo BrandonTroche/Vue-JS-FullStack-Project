@@ -6,10 +6,15 @@ const fs = require('fs')
 
 var contents = fs.readFileSync("db.json");
 var jsonContent = JSON.parse(contents);
+const jsonQuery = require('json-query')
+//console.log(jsonQuery('diagnosis[*patient_id=A000].date', {
+//    data:jsonContent
+//}))
 //console.log(jsonContent.labs[0].lab)
 
 const app = express()
-const plotly = require('plotly')('btroche', '3HB9eLk90oduXc1GJnIb')
+//const plotly = require('plotly')('btroche', '3HB9eLk90oduXc1GJnIb')
+const plotly = require('plotly')('Btown', 'uJe6Ne1LnU8Pxtit3Fsg')
 app.use(morgan('combined'))
 app.use(bodyParser.json())
 app.use(cors())
@@ -17,8 +22,8 @@ app.use(cors())
 app.post('/labs', (req, res) => {
     var values = []
     var dates = []
-    var values2 = []
-    var dates2 = []
+    
+    //Populate the Values and Dates for the first plot
     
     for (var i = 0; i < jsonContent.labs.length; i++){
         
@@ -53,6 +58,13 @@ app.post('/labs', (req, res) => {
         }
     };
     
+    plotly.plot(data, layout, function (err, msg) {
+        if (err) return console.log(err);
+        console.log(msg);
+    });  
+    
+    //Copy the query from Diagnosis to take all the patients data
+    
     var icd_code = []
     var date = []
     var description = []
@@ -86,8 +98,6 @@ app.post('/labs', (req, res) => {
         queryResult.push(myObject)
     }
     
-    console.log(queryResult.length)
-    
     var diagnosisFreqKeys = []
     var diagnosisFreqValues = []
     
@@ -100,6 +110,8 @@ app.post('/labs', (req, res) => {
         }
         return false
     }
+    
+    //Push each occurrance of trip reasons and increment them based on how many times they occur
     
     for (var i = 0; i < queryResult.length; i++){
         if(diagnosisFreqKeys.length == 0){
@@ -116,12 +128,10 @@ app.post('/labs', (req, res) => {
     var sortedKeys = ['','','','','','','','','','']
     var sortedArray = [0,0,0,0,0,0,0,0,0,0]
     
+    //Sort those trips for the 10 most frequent
+    
     for(var i = 0; i < 10; i++){
-        console.log(i)
         for(var j = 0; j < diagnosisFreqValues.length; j++){
-            console.log(j)
-            console.log(diagnosisFreqValues[j])
-            console.log(sortedArray[i])
 
             if(diagnosisFreqValues[j] > sortedArray[i]){
                 sortedArray[i] = diagnosisFreqValues[j]
@@ -132,10 +142,65 @@ app.post('/labs', (req, res) => {
         }
     }
     
-    console.log(sortedKeys)
-    console.log(sortedArray)
-//    var data2 = [{x:dates, y:values, type: 'bar'}];
-//    
+    var dates2 = []
+    
+    //Use JSON Query to grab all the dates of the second plot visits
+    
+    for (var i = 0; i < sortedKeys.length; i++){
+        
+        var q = (jsonQuery(['diagnosis[**][* patient_id=? & icd_code_id=?].date', req.body.patient_id, sortedKeys[i]], {data:jsonContent}).value)
+        
+        for(var j = 0; j < q.length; j++){
+            q[j] = q[j].slice(0,4)
+        }
+        
+        dates2 = dates2.concat(q)
+        
+    }
+    
+    
+    
+    var values2 = []
+    
+
+    //Set the icd values for the second plot's visits
+    
+    for (var i = 0; i < sortedKeys.length; i++){
+        for(var j = 0; j < sortedArray[i]; j++){
+            values2.push(sortedKeys[i])
+        }
+    }
+    
+
+    //Set the dates for all visits for each value in the scatter plot
+    
+    for (var i = 0; i < values2.length; i++){
+        for (var j = 0; j < jsonContent.diagnosis.length; j++){
+            if(jsonContent.diagnosis[j].icd_code_id == values2[i] && jsonContent.diagnosis[j].patient_id == req.body.patient_id){
+                dates2.push(jsonContent.diagnosis[i].date.slice(0,4))
+            }
+        }
+    }
+    
+//    console.log(values2)
+    
+    
+    
+//    var data2 = [{x:values2, y:dates2, type: 'bar'}];
+    
+    var trace1 = {
+        x: values2,
+        y: dates2,
+        name: "2012-2016",
+        type: "scatter"
+    };
+    var data = [trace1];
+    var graphOptions = {filename: "basic-line", fileopt: "overwrite"};
+    
+    plotly.plot(data, graphOptions, function (err, msg) {
+        console.log(msg);
+    });
+    
 //    var layout2 = {
 //        fileopt : "overwrite", 
 //        filename : "diagnosisOverTime",
@@ -157,16 +222,12 @@ app.post('/labs', (req, res) => {
 //            }
 //        }
 //    };
-
-    plotly.plot(data, layout, function (err, msg) {
-        if (err) return console.log(err);
-        console.log(msg);
-    });  
     
 //    plotly.plot(data2, layout2, function (err, msg) {
 //        if (err) return console.log(err);
 //        console.log(msg);
 //    });  
+    
 })
 
 app.post('/diagnosis', (req, res) => {
