@@ -11,14 +11,15 @@
             
       
 <!--        </ul>-->
-        <table class="blue">
+        <div class="blue">
+        <table border="1">
         
             <tr>
             
-                <th>Patient Id</th>
-                <th>Risk Score</th>
-                <th>Age</th>
-                <th>Sex</th>
+                <th style="background-color:#a6b1c1;">Patient Id</th>
+                <th style="background-color:#a6b1c1;">Risk Score</th>
+                <th style="background-color:#a6b1c1;">Age</th>
+                <th style="background-color:#a6b1c1;">Sex</th>
             </tr>
             <tr v-for="pa in patient">
 <!--                <li >-->
@@ -35,19 +36,20 @@
             </tr>
             
         </table>
-        
+        </div>
         <div class="yellow">
             
             a
         
         </div>
-        <table class="red">
+        <div class="red">
+        <table border="1">
             
                 <tr>
             
-                <th>Date</th>
-                <th>ICD Code</th>
-                <th>Description</th>
+                <th style="background-color:#a6b1c1;">Date</th>
+                <th style="background-color:#a6b1c1;">ICD Code</th>
+                <th style="background-color:#a6b1c1;">Description</th>
                     
                 </tr>
             <tr v-for="dia in diagnosis">
@@ -67,6 +69,7 @@
                             
 -->
         </table>
+        </div>
     </div>
 </template>
 
@@ -132,7 +135,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .blue{
-        background-color: aqua;
+/*        background-color: aqua;*/
+        overflow: scroll;
+        overflow-x: hidden;
+        overflow-y: scroll;
         height: 100% !important;
         width: 25% !important;
         float:left;
@@ -140,15 +146,21 @@ export default {
     
     .yellow{
         background-color: yellow;
-        height: 60% !important;
+        height: 375px !important;
         width: 75% !important;
         float:left;
+        overflow: scroll;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
     
     .red{
-        background-color: red;
-        height: 40% !important;
+/*        background-color: red;*/
+        height: 150px !important;
         width: 75% !important;
         float:left;
+        overflow: scroll;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
 </style>
